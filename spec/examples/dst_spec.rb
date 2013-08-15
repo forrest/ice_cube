@@ -30,6 +30,16 @@ describe IceCube::Schedule, 'occurs_on?' do
     end
   end
 
+  # DST in 2013 is November 6th at 1:30
+  it 'crosses a daylight savings time boundary (in the other direction) with a recurrence rule in local time, by utc conversion' do
+    Time.zone = "America/Denver"
+    start_at = Time.parse("Sun, 03 Nov 2013 01:30:00 MDT -06:00")
+    schedule = IceCube::Schedule.new(start_at)
+    schedule.add_recurrence_rule IceCube::Rule.daily
+    next_occurance = schedule.next_occurrence(start_at)
+    next_occurance.to_date.should_not == start_at.to_date # FAIL
+  end
+
   it 'cross a daylight savings time boundary with a recurrence rule in local time' do
     start_date = Time.local(2010, 3, 14, 5, 0, 0)
     schedule = IceCube::Schedule.new(start_date)
