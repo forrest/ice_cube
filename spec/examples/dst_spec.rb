@@ -32,8 +32,9 @@ describe IceCube::Schedule, 'occurs_on?' do
   end
 
   # DST in 2013 is November 6th -> 7th at 1:00AM
-  it 'not changing days with daily rule going over DST boundary' do
-    start_at = Time.parse("3 Nov 2013 01:00:00 MDT")
+  it '(America/Denver) not changing days with daily rule going over DST boundary' do
+    Time.zone = "America/Denver"
+    start_at = Time.zone.parse("Sun, 03 Nov 2013 01:30:00")
     schedule = IceCube::Schedule.new(start_at)
     schedule.add_recurrence_rule IceCube::Rule.daily
     next_occurance = schedule.next_occurrence(start_at)
