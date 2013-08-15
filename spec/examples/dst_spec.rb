@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'active_support/time'
 
 describe IceCube::Schedule, 'occurs_on?' do
 
@@ -30,10 +31,9 @@ describe IceCube::Schedule, 'occurs_on?' do
     end
   end
 
-  # DST in 2013 is November 6th at 1:30
-  it 'not changing days with daily rule' do
-    Time.zone = "America/Denver"
-    start_at = Time.parse("Sun, 03 Nov 2013 01:30:00 MDT -06:00")
+  # DST in 2013 is November 6th -> 7th at 1:00AM
+  it 'not changing days with daily rule going over DST boundary' do
+    start_at = Time.parse("3 Nov 2013 01:00:00 MDT")
     schedule = IceCube::Schedule.new(start_at)
     schedule.add_recurrence_rule IceCube::Rule.daily
     next_occurance = schedule.next_occurrence(start_at)
